@@ -17,15 +17,6 @@ global setXClientIDAccessToken
 global setXTimestampAccessToken
 global setBodyAccessToken
 
-global setAccessTokenInquiryVA
-global setXClientIDInquiryVA
-global setClientSecretInquiryVA
-global setXExternalIDInquiryVA
-global setXTimestampInquiryVA
-global setXSignatureInquiryVA
-global setChannelIDInquiryVA
-global setBodyInquiryVA
-
 global setAccessToken
 global setXPartnerID
 global setClientSecret
