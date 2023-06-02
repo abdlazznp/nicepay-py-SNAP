@@ -17,14 +17,6 @@ global setXClientIDAccessToken
 global setXTimestampAccessToken
 global setBodyAccessToken
 
-global setAccessTokenCreateVA
-global setXClientIDCreateVA
-global setClientSecretCreateVA
-global setXExternalIDCreateVA
-global setXTimestampCreateVA
-global setChannelIDCreateVA
-global setBodyCreateVA
-
 global setAccessTokenInquiryVA
 global setXClientIDInquiryVA
 global setClientSecretInquiryVA
@@ -34,11 +26,25 @@ global setXSignatureInquiryVA
 global setChannelIDInquiryVA
 global setBodyInquiryVA
 
+global setAccessToken
+global setXPartnerID
+global setClientSecret
+global setXExternalID
+global setXTimestamp
+global setXSignature
+global setChannelID
+global setOrigin
+global setBody
 
-host                    = "https://dev.nicepay.co.id/nicepay"
-accessTokenEndpoint     = "/v1.0/access-token/b2b"
-createVAEndpoint        = "/api/v1.0/transfer-va/create-va"
-inquiryVAEndpoint       = "/api/v1.0/transfer-va/status"
+
+host                        = "https://dev.nicepay.co.id/nicepay"
+accessTokenEndpoint         = "/v1.0/access-token/b2b"
+createVAEndpoint            = "/api/v1.0/transfer-va/create-va"
+inquiryVAEndpoint           = "/api/v1.0/transfer-va/status"
+directDebitEndpoint         = "/api/v1.0/debit/payment-host-to-host"
+inquiryDirectDebitEndpoint  = "/api/v1.0/debit/status"
+refundDirectDebitEndpoint   = "/api/v1.0/debit/refund"
+createQRISEndpoint          = "/api/v1.0/qr/qr-mpm-generate"
 method                  = "POST"
 
 def genAccessToken() :
@@ -80,26 +86,26 @@ def genAccessToken() :
 def createVA() :
     
     # SIGNATURE CREATE VIRTUAL ACCOUNT
-    clientSecret = setClientSecretCreateVA
-    authorization = "Bearer " + setAccessTokenCreateVA
-    bodyCleanser = json.dumps(setBodyCreateVA)
+    clientSecret = setClientSecret
+    authorization = "Bearer " + setAccessToken
+    bodyCleanser = json.dumps(setBody)
     bodyHashing = hashlib.sha256(bodyCleanser.encode())
     bodyHex = bodyHashing.hexdigest()
 
-    StringToSign = f"{method}:{createVAEndpoint}:{setAccessTokenCreateVA}:{bodyHex}:{setXTimestampCreateVA}"
+    StringToSign = f"{method}:{createVAEndpoint}:{setAccessToken}:{bodyHex}:{setXTimestamp}"
     encryptToHmacSHA512 = hmac.new(clientSecret.encode(), StringToSign.encode(), hashlib.sha512).digest()
 
     # DECLARE REQUEST
     url = host + createVAEndpoint
     header = {"Content-Type" : setContentType,
               "Authorization" : authorization,
-              "X-TIMESTAMP" : setXTimestampCreateVA,
+              "X-TIMESTAMP" : setXTimestamp,
               "X-SIGNATURE" : base64.b64encode(encryptToHmacSHA512).decode(),
-              "X-PARTNER-ID" : setXClientIDCreateVA,
-              "X-EXTERNAL-ID" : setXExternalIDCreateVA,
-              "CHANNEL-ID" : setChannelIDCreateVA
+              "X-PARTNER-ID" : setXPartnerID,
+              "X-EXTERNAL-ID" : setXExternalID,
+              "CHANNEL-ID" : setChannelID
               }
-    body = setBodyCreateVA
+    body = setBody
     response = requests.post(url = url, headers = header, json = body)
 
     # OUTPUT
@@ -118,33 +124,32 @@ def createVA() :
 def inquiryVA() :
 
     # SIGNATURE INQUIRY VIRTUAL ACCOUNT
-    clientSecret = setClientSecretInquiryVA
-    authorization = "Bearer " + setAccessTokenInquiryVA
-    bodyCleanser = json.dumps(setBodyInquiryVA)
+    clientSecret = setClientSecret
+    authorization = "Bearer " + setAccessToken
+    bodyCleanser = json.dumps(setBody)
     bodyHashing = hashlib.sha256(bodyCleanser.encode())
     bodyHex = bodyHashing.hexdigest()
 
-    StringToSign = f"{method}:{inquiryVAEndpoint}:{setAccessTokenInquiryVA}:{bodyHex}:{setXTimestampInquiryVA}"
+    StringToSign = f"{method}:{inquiryVAEndpoint}:{setAccessToken}:{bodyHex}:{setXTimestamp}"
     encryptToHmacSHA512 = hmac.new(clientSecret.encode(), StringToSign.encode(), hashlib.sha512).digest()
 
     # DECLARE REQUEST
     url = host + inquiryVAEndpoint
     header = {"Content-Type": setContentType,
               "Authorization": authorization,
-              "X-TIMESTAMP": setXTimestampInquiryVA,
+              "X-TIMESTAMP": setXTimestamp,
               "X-SIGNATURE": base64.b64encode(encryptToHmacSHA512).decode(),
-              "X-PARTNER-ID": setXClientIDInquiryVA,
-              "X-EXTERNAL-ID": setXExternalIDInquiryVA,
-              "CHANNEL-ID": setChannelIDInquiryVA
+              "X-PARTNER-ID": setXPartnerID,
+              "X-EXTERNAL-ID": setXExternalID,
+              "CHANNEL-ID": setChannelID
               }
-    body = setBodyInquiryVA
+    body = setBody
     response = requests.post(url= url, headers= header, json = body)
 
     # OUTPUT
     print("-----------------------------")
     print("VIRTUAL ACCOUNT INQUIRY")
     print("-----------------------------")
-    print(StringToSign)
     print(f"Header       : {header}")
     print("-----------------------------")
     print(f"Body         : {body}")
@@ -155,4 +160,154 @@ def inquiryVA() :
     return ()
 
 def directDebit() :
-    print("NGENGGGGG!")
+
+    # SIGNATURE DIRECT DEBIT
+    clientSecret = setClientSecret
+    authorization = "Bearer " + setAccessToken
+    bodyCleanser = json.dumps(setBody)
+    bodyHashing = hashlib.sha256(bodyCleanser.encode())
+    bodyHex = bodyHashing.hexdigest()
+
+    StringToSign = f"{method}:{directDebitEndpoint}:{setAccessToken}:{bodyHex}:{setXTimestamp}"
+    encryptToHmacSHA512 = hmac.new(clientSecret.encode(), StringToSign.encode(), hashlib.sha512).digest()
+
+    # DECLARE REQUEST
+    url = host + directDebitEndpoint
+    header = {"Content-Type": setContentType,
+              "Authorization": authorization,
+              "X-TIMESTAMP": setXTimestamp,
+              "X-SIGNATURE": base64.b64encode(encryptToHmacSHA512).decode(),
+              "X-PARTNER-ID": setXPartnerID,
+              "X-EXTERNAL-ID": setXExternalID,
+              "CHANNEL-ID": setChannelID
+              }
+    body = setBody
+    response = requests.post(url = url, headers = header, json = body)
+
+    # OUTPUT
+    print("-----------------------------")
+    print("DIRECT DEBIT")
+    print("-----------------------------")
+    print(f"Header       : {header}")
+    print("-----------------------------")
+    print(f"Body         : {body}")
+    print("-----------------------------")
+    print(f"Response     : {response.json()}")
+    print("-----------------------------")
+
+    return ()
+
+def inquiryDirectDebit() :
+
+    # SIGNATURE DIRECT DEBIT
+    clientSecret = setClientSecret
+    authorization = "Bearer " + setAccessToken
+    bodyCleanser = json.dumps(setBody)
+    bodyHashing = hashlib.sha256(bodyCleanser.encode())
+    bodyHex = bodyHashing.hexdigest()
+
+    StringToSign = f"{method}:{inquiryDirectDebitEndpoint}:{setAccessToken}:{bodyHex}:{setXTimestamp}"
+    encryptToHmacSHA512 = hmac.new(clientSecret.encode(), StringToSign.encode(), hashlib.sha512).digest()
+
+    # DECLARE REQUEST
+    url = host + inquiryDirectDebitEndpoint
+    header = {"Content-Type": setContentType,
+              "Authorization": authorization,
+              "X-TIMESTAMP": setXTimestamp,
+              "X-SIGNATURE": base64.b64encode(encryptToHmacSHA512).decode(),
+              "X-PARTNER-ID": setXPartnerID,
+              "X-EXTERNAL-ID": setXExternalID,
+              "CHANNEL-ID": setChannelID
+              }
+    body = setBody
+    response = requests.post(url=url, headers=header, json=body)
+
+    # OUTPUT
+    print("-----------------------------")
+    print("DIRECT DEBIT")
+    print("-----------------------------")
+    print(f"Header       : {header}")
+    print("-----------------------------")
+    print(f"Body         : {body}")
+    print("-----------------------------")
+    print(f"Response     : {response.json()}")
+    print("-----------------------------")
+
+    return ()
+
+def refundDirectDebit() :
+
+    # SIGNATURE DIRECT DEBIT
+    clientSecret = setClientSecret
+    authorization = "Bearer " + setAccessToken
+    bodyCleanser = json.dumps(setBody)
+    bodyHashing = hashlib.sha256(bodyCleanser.encode())
+    bodyHex = bodyHashing.hexdigest()
+
+    StringToSign = f"{method}:{refundDirectDebitEndpoint}:{setAccessToken}:{bodyHex}:{setXTimestamp}"
+    encryptToHmacSHA512 = hmac.new(clientSecret.encode(), StringToSign.encode(), hashlib.sha512).digest()
+
+    # DECLARE REQUEST
+    url = host + refundDirectDebitEndpoint
+    header = {"Content-Type": setContentType,
+              "Authorization": authorization,
+              "X-TIMESTAMP": setXTimestamp,
+              "X-SIGNATURE": base64.b64encode(encryptToHmacSHA512).decode(),
+              "X-PARTNER-ID": setXPartnerID,
+              "X-EXTERNAL-ID": setXExternalID,
+              "CHANNEL-ID": setChannelID
+              }
+    body = setBody
+    response = requests.post(url=url, headers=header, json=body)
+
+    # OUTPUT
+    print("-----------------------------")
+    print("DIRECT DEBIT")
+    print("-----------------------------")
+    print(f"Header       : {header}")
+    print("-----------------------------")
+    print(f"Body         : {body}")
+    print("-----------------------------")
+    print(f"Response     : {response.json()}")
+    print("-----------------------------")
+
+    return ()
+
+
+def createQRIS() :
+
+    # SIGNATURE DIRECT DEBIT
+    clientSecret = setClientSecret
+    authorization = "Bearer " + setAccessToken
+    bodyCleanser = json.dumps(setBody)
+    bodyHashing = hashlib.sha256(bodyCleanser.encode())
+    bodyHex = bodyHashing.hexdigest()
+
+    StringToSign = f"{method}:{createQRISEndpoint}:{setAccessToken}:{bodyHex}:{setXTimestamp}"
+    encryptToHmacSHA512 = hmac.new(clientSecret.encode(), StringToSign.encode(), hashlib.sha512).digest()
+
+    # DECLARE REQUEST
+    url = host + createQRISEndpoint
+    header = {"Content-Type": setContentType,
+              "Authorization": authorization,
+              "X-TIMESTAMP": setXTimestamp,
+              "X-SIGNATURE": base64.b64encode(encryptToHmacSHA512).decode(),
+              "X-PARTNER-ID": setXPartnerID,
+              "X-EXTERNAL-ID": setXExternalID,
+              "CHANNEL-ID": setChannelID
+              }
+    body = setBody
+    response = requests.post(url=url, headers=header, json=body)
+
+    # OUTPUT
+    print("-----------------------------")
+    print("DIRECT DEBIT")
+    print("-----------------------------")
+    print(f"Header       : {header}")
+    print("-----------------------------")
+    print(f"Body         : {body}")
+    print("-----------------------------")
+    print(f"Response     : {response.json()}")
+    print("-----------------------------")
+
+    return ()

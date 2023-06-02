@@ -2,13 +2,13 @@ from nicepay import nicepaySNAP
 import datetime
 
 nicepaySNAP.setContentType = "Application/JSON"
-nicepaySNAP.setAccessTokenCreateVA = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUTklDRVZBMDIyIiwiaXNzIjoiTklDRVBBWSIsIm5hbWUiOiJUTklDRVZBMDIyIiwiZXhwIjoiMjAyMy0wNS0zMVQwODo0ODowMVoifQ==.Utf7GTH7nrqd0Tq2QpKp8Q-4kP0piai0hi3PZsf0Hcw="
-nicepaySNAP.setXTimestampCreateVA = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")+"+07:00"
-nicepaySNAP.setClientSecretCreateVA = "1af9014925cab04606b2e77a7536cb0d5c51353924a966e503953e010234108a"
-nicepaySNAP.setXClientIDCreateVA = "TNICEVA022"
-nicepaySNAP.setXExternalIDCreateVA = "OrdNo" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-nicepaySNAP.setChannelIDCreateVA = "NICE"
-nicepaySNAP.setBodyCreateVA = {
+nicepaySNAP.setAccessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJUTklDRVZBMDIyIiwiaXNzIjoiTklDRVBBWSIsIm5hbWUiOiJUTklDRVZBMDIyIiwiZXhwIjoiMjAyMy0wNi0wMlQwMToxMDo1MVoifQ==.64-GnyUzO-zCRInZYZhd5ljcvFtKg141xe2omAsy-KQ="
+nicepaySNAP.setXTimestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")+"+07:00"
+nicepaySNAP.setClientSecret = "1af9014925cab04606b2e77a7536cb0d5c51353924a966e503953e010234108a"
+nicepaySNAP.setXPartnerID = "TNICEVA022"
+nicepaySNAP.setXExternalID = "OrdNo" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+nicepaySNAP.setChannelID = "NICE"
+nicepaySNAP.setBody = {
     "partnerServiceId":"",
     "customerNo":"000666",
     "virtualAccountNo":"",
