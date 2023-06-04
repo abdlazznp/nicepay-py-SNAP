@@ -3,7 +3,7 @@ import datetime
 
 timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 nicepaySNAP.setContentType = "Application/JSON"
-nicepaySNAP.setAccessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJJT05QQVlURVNUIiwiaXNzIjoiTklDRVBBWSIsIm5hbWUiOiJCQkJBIiwiZXhwIjoiMjAyMy0wNi0wMlQwMTowMToxN1oifQ==.p66ooqmoRBEXUeefYU_WiQS5bp1W63y73ZTaMxh0Q5Q="
+nicepaySNAP.setAccessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJJT05QQVlURVNUIiwiaXNzIjoiTklDRVBBWSIsIm5hbWUiOiJCQkJBIiwiZXhwIjoiMjAyMy0wNi0wNFQxNzo0NDoxN1oifQ==.RtqoP-dReVkWLz3gt3lvvAXLEWcc2ZMWnbu2kb65lCI="
 nicepaySNAP.setXTimestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")+"+07:00"
 nicepaySNAP.setClientSecret = "1af9014925cab04606b2e77a7536cb0d5c51353924a966e503953e010234108a"
 nicepaySNAP.setXPartnerID = "IONPAYTEST"

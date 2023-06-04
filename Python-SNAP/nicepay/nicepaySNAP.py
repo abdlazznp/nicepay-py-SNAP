@@ -28,7 +28,7 @@ global setOrigin
 global setBody
 
 
-host                        = "https://dev.nicepay.co.id/nicepay"
+host                        = "https://staging.nicepay.co.id/nicepay"
 accessTokenEndpoint         = "/v1.0/access-token/b2b"
 createVAEndpoint            = "/api/v1.0/transfer-va/create-va"
 inquiryVAEndpoint           = "/api/v1.0/transfer-va/status"
@@ -36,7 +36,9 @@ directDebitEndpoint         = "/api/v1.0/debit/payment-host-to-host"
 inquiryDirectDebitEndpoint  = "/api/v1.0/debit/status"
 refundDirectDebitEndpoint   = "/api/v1.0/debit/refund"
 createQRISEndpoint          = "/api/v1.0/qr/qr-mpm-generate"
-method                  = "POST"
+inquiryQRISEndpoint         = "/api/v1.0/qr/qr-mpm-query"
+refundQRISEndpoint          = "/api/v1.0/qr/qr-mpm-refund"
+method                      = "POST"
 
 def genAccessToken() :
     
@@ -152,7 +154,7 @@ def inquiryVA() :
 
 def directDebit() :
 
-    # SIGNATURE DIRECT DEBIT
+    # SIGNATURE CREATE DIRECT DEBIT
     clientSecret = setClientSecret
     authorization = "Bearer " + setAccessToken
     bodyCleanser = json.dumps(setBody)
@@ -190,7 +192,7 @@ def directDebit() :
 
 def inquiryDirectDebit() :
 
-    # SIGNATURE DIRECT DEBIT
+    # SIGNATURE INQUIRY DIRECT DEBIT
     clientSecret = setClientSecret
     authorization = "Bearer " + setAccessToken
     bodyCleanser = json.dumps(setBody)
@@ -215,7 +217,7 @@ def inquiryDirectDebit() :
 
     # OUTPUT
     print("-----------------------------")
-    print("DIRECT DEBIT")
+    print("INQUIRY DIRECT DEBIT")
     print("-----------------------------")
     print(f"Header       : {header}")
     print("-----------------------------")
@@ -228,7 +230,7 @@ def inquiryDirectDebit() :
 
 def refundDirectDebit() :
 
-    # SIGNATURE DIRECT DEBIT
+    # SIGNATURE REFUND DIRECT DEBIT
     clientSecret = setClientSecret
     authorization = "Bearer " + setAccessToken
     bodyCleanser = json.dumps(setBody)
@@ -253,7 +255,7 @@ def refundDirectDebit() :
 
     # OUTPUT
     print("-----------------------------")
-    print("DIRECT DEBIT")
+    print("REFUND DIRECT DEBIT")
     print("-----------------------------")
     print(f"Header       : {header}")
     print("-----------------------------")
@@ -267,7 +269,7 @@ def refundDirectDebit() :
 
 def createQRIS() :
 
-    # SIGNATURE DIRECT DEBIT
+    # SIGNATURE CREATE QRIS
     clientSecret = setClientSecret
     authorization = "Bearer " + setAccessToken
     bodyCleanser = json.dumps(setBody)
@@ -292,7 +294,83 @@ def createQRIS() :
 
     # OUTPUT
     print("-----------------------------")
-    print("DIRECT DEBIT")
+    print("CREATE QRIS")
+    print("-----------------------------")
+    print(f"Header       : {header}")
+    print("-----------------------------")
+    print(f"Body         : {body}")
+    print("-----------------------------")
+    print(f"Response     : {response.json()}")
+    print("-----------------------------")
+
+    return ()
+
+def inquiryQRIS() :
+
+    # SIGNATURE INQUIRY QRIS
+    clientSecret = setClientSecret
+    authorization = "Bearer " + setAccessToken
+    bodyCleanser = json.dumps(setBody)
+    bodyHashing = hashlib.sha256(bodyCleanser.encode())
+    bodyHex = bodyHashing.hexdigest()
+
+    StringToSign = f"{method}:{inquiryQRISEndpoint}:{setAccessToken}:{bodyHex}:{setXTimestamp}"
+    encryptToHmacSHA512 = hmac.new(clientSecret.encode(), StringToSign.encode(), hashlib.sha512).digest()
+
+    # DECLARE REQUEST
+    url = host + inquiryQRISEndpoint
+    header = {"Content-Type": setContentType,
+              "Authorization": authorization,
+              "X-TIMESTAMP": setXTimestamp,
+              "X-SIGNATURE": base64.b64encode(encryptToHmacSHA512).decode(),
+              "X-PARTNER-ID": setXPartnerID,
+              "X-EXTERNAL-ID": setXExternalID,
+              "CHANNEL-ID": setChannelID
+              }
+    body = setBody
+    response = requests.post(url=url, headers=header, json=body)
+
+    # OUTPUT
+    print("-----------------------------")
+    print("INQUIRY QRIS")
+    print("-----------------------------")
+    print(f"Header       : {header}")
+    print("-----------------------------")
+    print(f"Body         : {body}")
+    print("-----------------------------")
+    print(f"Response     : {response.json()}")
+    print("-----------------------------")
+
+    return ()
+
+def refundQRIS() :
+
+    # SIGNATURE REFUND QRIS
+    clientSecret = setClientSecret
+    authorization = "Bearer " + setAccessToken
+    bodyCleanser = json.dumps(setBody)
+    bodyHashing = hashlib.sha256(bodyCleanser.encode())
+    bodyHex = bodyHashing.hexdigest()
+
+    StringToSign = f"{method}:{refundQRISEndpoint}:{setAccessToken}:{bodyHex}:{setXTimestamp}"
+    encryptToHmacSHA512 = hmac.new(clientSecret.encode(), StringToSign.encode(), hashlib.sha512).digest()
+
+    # DECLARE REQUEST
+    url = host + refundQRISEndpoint
+    header = {"Content-Type": setContentType,
+              "Authorization": authorization,
+              "X-TIMESTAMP": setXTimestamp,
+              "X-SIGNATURE": base64.b64encode(encryptToHmacSHA512).decode(),
+              "X-PARTNER-ID": setXPartnerID,
+              "X-EXTERNAL-ID": setXExternalID,
+              "CHANNEL-ID": setChannelID
+              }
+    body = setBody
+    response = requests.post(url=url, headers=header, json=body)
+
+    # OUTPUT
+    print("-----------------------------")
+    print("INQUIRY QRIS")
     print("-----------------------------")
     print(f"Header       : {header}")
     print("-----------------------------")
