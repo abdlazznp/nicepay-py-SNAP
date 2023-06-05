@@ -28,7 +28,7 @@ global setOrigin
 global setBody
 
 
-host                        = "https://staging.nicepay.co.id/nicepay"
+host                        = "https://dev.nicepay.co.id/nicepay"
 accessTokenEndpoint         = "/v1.0/access-token/b2b"
 createVAEndpoint            = "/api/v1.0/transfer-va/create-va"
 inquiryVAEndpoint           = "/api/v1.0/transfer-va/status"
@@ -38,6 +38,12 @@ refundDirectDebitEndpoint   = "/api/v1.0/debit/refund"
 createQRISEndpoint          = "/api/v1.0/qr/qr-mpm-generate"
 inquiryQRISEndpoint         = "/api/v1.0/qr/qr-mpm-query"
 refundQRISEndpoint          = "/api/v1.0/qr/qr-mpm-refund"
+createPayoutEndpoint        = "/api/v1.0/transfer/registration"
+approvePayoutEndpoint       = "/api/v1.0/transfer/approve"
+inquiryPayoutEndpoint       = "/api/v1.0/transfer/inquiry"
+cancelPayoutEndpoint        = "/api/v1.0/transfer/cancel"
+rejectPayoutEndpoint        = "/api/v1.0/transfer/reject"
+balanceInquiryPayoutEndpoint= "/api/v1.0/transfer/balance-inquiry"
 method                      = "POST"
 
 def genAccessToken() :
@@ -370,7 +376,45 @@ def refundQRIS() :
 
     # OUTPUT
     print("-----------------------------")
-    print("INQUIRY QRIS")
+    print("REFUND QRIS")
+    print("-----------------------------")
+    print(f"Header       : {header}")
+    print("-----------------------------")
+    print(f"Body         : {body}")
+    print("-----------------------------")
+    print(f"Response     : {response.json()}")
+    print("-----------------------------")
+
+    return ()
+
+def createPayout() :
+
+    # SIGNATURE CREATE PAYOUT
+    clientSecret = setClientSecret
+    authorization = "Bearer " + setAccessToken
+    bodyCleanser = json.dumps(setBody)
+    bodyHashing = hashlib.sha256(bodyCleanser.encode())
+    bodyHex = bodyHashing.hexdigest()
+
+    StringToSign = f"{method}:{createPayoutEndpoint}:{setAccessToken}:{bodyHex}:{setXTimestamp}"
+    encryptToHmacSHA512 = hmac.new(clientSecret.encode(), StringToSign.encode(), hashlib.sha512).digest()
+
+    # DECLARE REQUEST
+    url = host + createPayoutEndpoint
+    header = {"Content-Type": setContentType,
+              "Authorization": authorization,
+              "X-TIMESTAMP": setXTimestamp,
+              "X-SIGNATURE": base64.b64encode(encryptToHmacSHA512).decode(),
+              "X-PARTNER-ID": setXPartnerID,
+              "X-EXTERNAL-ID": setXExternalID,
+              "CHANNEL-ID": setChannelID
+              }
+    body = setBody
+    response = requests.post(url=url, headers=header, json=body)
+
+    # OUTPUT
+    print("-----------------------------")
+    print("REQUEST PAYOUT")
     print("-----------------------------")
     print(f"Header       : {header}")
     print("-----------------------------")
