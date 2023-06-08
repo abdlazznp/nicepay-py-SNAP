@@ -3,7 +3,7 @@ import datetime
 
 timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 nicepaySNAP.setContentType = "Application/JSON"
-nicepaySNAP.setAccessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJJT05QQVlURVNUIiwiaXNzIjoiTklDRVBBWSIsIm5hbWUiOiJCTVJJIiwiZXhwIjoiMjAyMy0wNi0wNVQwOTo0Njo0NVoifQ==.dmhHd1Nw0im-izF58HpHRBQcO1MkQg9Xj69p1A2y8YI="
+nicepaySNAP.setAccessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJJT05QQVlURVNUIiwiaXNzIjoiTklDRVBBWSIsIm5hbWUiOiJCTVJJIiwiZXhwIjoiMjAyMy0wNi0wOFQwMzoyNjowOFoifQ==.B1L7pzqRZWz7lY_10XqMyNKyO6Mj59WZL5-TY3sfqWY="
 nicepaySNAP.setXTimestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")+"+07:00"
 nicepaySNAP.setClientSecret = "33F49GnCMS1mFYlGXisbUDzVf2ATWCl9k3R++d5hDd3Frmuos/XLx8XhXpe+LDYAbpGKZYSwtlyyLOtS/8aD7A=="
 nicepaySNAP.setXPartnerID = "IONPAYTEST"
@@ -26,8 +26,8 @@ nicepaySNAP.setBody = {
                "currency" : "IDR"
            },
            "partnerReferenceNo" : "OrdNo" + timestamp,
-           "reservedDt" : "20230605",
-           "reservedTm" : "180000",
+           "reservedDt" : "",
+           "reservedTm" : "",
            "deliveryId" : "",
            "deliveryName" : "Merchant's Name",
            "description" : "This Is The Description Of The Payment",
